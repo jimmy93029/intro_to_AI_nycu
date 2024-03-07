@@ -59,10 +59,13 @@ class Adaboost:
                 weights[i] = 1.0 / (2 * negNum)
         for t in range(self.T):
             print("Run No. of Iteration: %d" % (t + 1))
+
             # Normalize weights
             weights = weights / np.sum(weights)
+
             # Compute error and select best classifiers
             clf, error = self.selectBest(featureVals, iis, labels, features, weights)
+
             # update weights
             accuracy = []
             for x, y in zip(iis, labels):
@@ -161,7 +164,28 @@ class Adaboost:
             bestError: The error of the best classifer
         """
         # Begin your code (Part 2)
-        raise NotImplementedError("To be implemented")
+
+        # train weak classifier for each feature
+        min_error = float('inf')
+        best_feature = None
+        best_threshold = 0
+        best_polarity = 0
+        for j in range(len(features)):
+            for i in range(len(iis)):
+                threshold = featureVals[j][i]
+                for polarity in range(-1, 2, 2):
+                    # consider the difference between labels and and prediction
+                    # prediction = 1 if polarity * (threshold - Vals) > 0 else 0
+                    differ = np.where(polarity * (threshold - featureVals[j]) > 0, 1, 0) - labels
+                    # take weighted sum on difference
+                    error = abs(differ).dot(weights)
+                    if error < min_error:
+                        min_error = error
+                        best_threshold = threshold
+                        best_polarity = polarity
+                        best_feature = features[j]
+        bestClf = WeakClassifier(best_feature, best_threshold, best_polarity)
+        bestError = min_error
         # End your code (Part 2)
         return bestClf, bestError
 

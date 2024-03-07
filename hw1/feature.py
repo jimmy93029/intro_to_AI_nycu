@@ -14,6 +14,7 @@ class RectangleRegion:
     def __repr__(self):
         return "RectangleRegion(%d, %d, %d, %d)" % (self.x, self.y, self.width, self.height)
 
+
 class HaarFeature:
     def __init__(self, posRegions, negRegions):
         self.posRegions = posRegions

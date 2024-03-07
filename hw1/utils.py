@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def evaluate(clf, dataset):
     all_negatives, all_positives = 0, 0
     true_negatives, false_negatives = 0, 0
@@ -27,6 +28,7 @@ def evaluate(clf, dataset):
     print("False Positive Rate: %d/%d (%f)" % (false_positives, all_negatives, false_positives/all_negatives))
     print("False Negative Rate: %d/%d (%f)" % (false_negatives, all_positives, false_negatives/all_positives))
     print("Accuracy: %d/%d (%f)" % (correct, len(dataset), correct/len(dataset)))
+
 
 def integralImage(image):
     """
