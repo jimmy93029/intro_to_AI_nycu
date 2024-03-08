@@ -16,6 +16,7 @@ def parse_args():
 
 
 def main(args):
+
     # Part 1: Implement load_data_FDDB function in dataset.py and test the following code.
     print('Loading images')
     trainData, testData = dataset.create_dataset(args.data)
@@ -40,6 +41,7 @@ def main(args):
     clf.train(trainData)
 
     clf.save('clf_200_1_10')
+
     clf = adaboost.Adaboost.load('clf_200_1_10')
 
     print('\nEvaluate your classifier with training dataset')
@@ -52,11 +54,10 @@ def main(args):
     print('\nDetect faces at the assigned location using your classifier')
     detection.detect('data/detect/detectData.txt', clf)
 
-    """
+
     # Part 5: Test classifier on your own images
     print('\nDetect faces on your own images')
     detection.detect('data/detect/yourOwnImages.txt', clf)
-    """
 
 
 if __name__ == "__main__":

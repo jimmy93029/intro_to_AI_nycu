@@ -11,6 +11,7 @@ class RectangleRegion:
 
     def __str__(self):
         return "(x= %d, y= %d, width= %d, height= %d)" % (self.x, self.y, self.width, self.height)
+
     def __repr__(self):
         return "RectangleRegion(%d, %d, %d, %d)" % (self.x, self.y, self.width, self.height)
 

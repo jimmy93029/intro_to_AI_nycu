@@ -19,7 +19,6 @@ def detect(dataPath, clf):
         No returns.
     """
     # Begin your code (Part 4)
-    dataPath = "data/detect/detectData.txt"
     with open(dataPath, 'r') as file:
         line_list = [line.rstrip().split() for line in file]
 
@@ -32,12 +31,13 @@ def detect(dataPath, clf):
         # Crop face region using the ground truth label
         box_list = []
         for i in range(num_faces):
+
             # get boxes
             x, y = int(line_list[line_idx + 1 + i][0]), int(line_list[line_idx + 1 + i][1])
             w, h = int(line_list[line_idx + 1 + i][2]), int(line_list[line_idx + 1 + i][3])
             left_top = (max(x, 0), max(y, 0))
             right_bottom = (min(x + w, img_gray.shape[1]), min(y + h, img_gray.shape[0]))
-            img_crop = img_gray[left_top[1]:right_bottom[1], left_top[0]:right_bottom[0]].copy()
+            img_crop = np.asarray(cv2.resize(img_gray[y:y + h, x:x + w].copy(), (19, 19)), dtype=np.uint8)
 
             # classify
             if clf.classify(img_crop) == 1:
