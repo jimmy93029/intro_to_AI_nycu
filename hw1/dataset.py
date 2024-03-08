@@ -19,9 +19,29 @@ def load_data_small():
     """
 
     # Begin your code (Part 1-1)
-    raise NotImplementedError("To be implemented")
+    # Define paths for face and non-face images
+    train_face_path = 'data/data_small/train/face/*.pgm'
+    train_nonface_path = 'data/data_small/train/nonface/*.pgm'
+    test_face_path = 'data/data_small/test/face/*.pgm'
+    test_nonface_path = 'data/data_small/test/nonface/*.pgm'
+
+    # Load training dataset
+    train_data = []
+    for path, label in [(train_face_path, 1), (train_nonface_path, 0)]:
+        for filename in glob.glob(path):
+            img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+            train_data.append((img, label))
+
+    # Load testing dataset
+    test_data = []
+    for path, label in [(test_face_path, 1), (test_nonface_path, 0)]:
+        for filename in glob.glob(path):
+            img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+            test_data.append((img, label))
+
+    dataset = [train_data, test_data]
     # End your code (Part 1-1)
-    
+
     return dataset
 
 
@@ -66,7 +86,7 @@ def load_data_FDDB(data_idx="01"):
             # Here, each face is denoted by:
             # <major_axis_radius minor_axis_radius angle center_x center_y 1>.
             coord = [int(float(j)) for j in line_list[line_idx + 2 + i].split()]
-            x, y = coord[3] - coord[1], coord[4] - coord[0]            
+            x, y = coord[3] - coord[1], coord[4] - coord[0]
             w, h = 2 * coord[1], 2 * coord[0]
 
             left_top = (max(x, 0), max(y, 0))
@@ -81,13 +101,37 @@ def load_data_FDDB(data_idx="01"):
 
         # Random crop N non-face region
         # Here we set N equal to the number of faces to generate a balanced dataset
-        # Note that we have alreadly save the bounding box of faces into `face_box_list`, you can utilize it for non-face region cropping
+        # Note that we have alreadly save the bounding box of faces into `face_box_list`,
+        # you can utilize it for non-face region cropping
         for i in range(num_faces):
             # Begin your code (Part 1-2)
-            raise NotImplementedError("To be implemented")
-            # End your code (Part 1-2)
+            face_box = face_box_list[i]
+            for _ in range(num_faces):  # Repeat the cropping process for each face
+                img_h, img_w = img_gray.shape
 
-            nonface_dataset.append((cv2.resize(img_crop, (19, 19)), 0))
+                # Randomly generate non-face bounding box
+                # Ensure that the non-face bounding box does not intersect with any face bounding box
+                while True:
+                    # Generate random coordinates for non-face region
+                    x1 = np.random.randint(0, img_w - 19)  # Left coordinate of the bounding box
+                    y1 = np.random.randint(0, img_h - 19)  # Top coordinate of the bounding box
+                    x2 = x1 + 19  # Right coordinate of the bounding box
+                    y2 = y1 + 19  # Bottom coordinate of the bounding box
+
+                    # Check if the non-face bounding box intersects with any face bounding box
+                    intersects = False
+                    for face_box in face_box_list:
+                        if (x1 < face_box[1][0] and x2 > face_box[0][0] and
+                                y1 < face_box[1][1] and y2 > face_box[0][1]):
+                            intersects = True
+                            break
+
+                    if not intersects:
+                        break
+
+                img_crop = img_gray[y1:y2, x1:x2].copy()
+                # End your code (Part 1-2)
+                nonface_dataset.append((cv2.resize(img_crop, (19, 19)), 0))
 
         # cv2.imshow("windows", img_gray)
         # cv2.waitKey(0)
@@ -96,9 +140,10 @@ def load_data_FDDB(data_idx="01"):
     num_face_data, num_nonface_data = len(face_dataset), len(nonface_dataset)
     SPLIT_RATIO = 0.7
 
-    train_dataset = face_dataset[:int(SPLIT_RATIO * num_face_data)] + nonface_dataset[:int(SPLIT_RATIO * num_nonface_data)]
-    test_dataset = face_dataset[int(SPLIT_RATIO * num_face_data):] + nonface_dataset[int(SPLIT_RATIO * num_nonface_data):]
-
+    train_dataset = face_dataset[:int(SPLIT_RATIO * num_face_data)] + nonface_dataset[
+                                                                      :int(SPLIT_RATIO * num_nonface_data)]
+    test_dataset = face_dataset[int(SPLIT_RATIO * num_face_data):] + nonface_dataset[
+                                                                     int(SPLIT_RATIO * num_nonface_data):]
     return train_dataset, test_dataset
 
 

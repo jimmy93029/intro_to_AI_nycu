@@ -25,8 +25,12 @@ def evaluate(clf, dataset):
                 true_negatives += 1
     
     correct = true_positives + true_negatives
-    print("False Positive Rate: %d/%d (%f)" % (false_positives, all_negatives, false_positives/all_negatives))
-    print("False Negative Rate: %d/%d (%f)" % (false_negatives, all_positives, false_negatives/all_positives))
+
+    false_positive_rate = false_positives / all_negatives if all_negatives != 0 else float('NaN')
+    false_negatives_rate = false_negatives/all_positives if all_positives != 0 else float ('NaN')
+
+    print("False Positive Rate: %d/%d (%f)" % (false_positives, all_negatives, false_positive_rate))
+    print("False Negative Rate: %d/%d (%f)" % (false_negatives, all_positives, false_negatives_rate))
     print("Accuracy: %d/%d (%f)" % (correct, len(dataset), correct/len(dataset)))
 
 

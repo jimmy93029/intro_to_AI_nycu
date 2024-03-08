@@ -167,24 +167,24 @@ class Adaboost:
 
         # train weak classifier for each feature
         min_error = float('inf')
-        best_feature = None
+        bestClf = None
         best_threshold = 0
         best_polarity = 0
+
         for j in range(len(features)):
             for i in range(len(iis)):
                 threshold = featureVals[j][i]
-                for polarity in range(-1, 2, 2):
-                    # consider the difference between labels and and prediction
-                    # prediction = 1 if polarity * (threshold - Vals) > 0 else 0
-                    differ = np.where(polarity * (threshold - featureVals[j]) > 0, 1, 0) - labels
-                    # take weighted sum on difference
-                    error = abs(differ).dot(weights)
+                for polarity in [-1, 1]:
+                    # Compute predictions based on the threshold and polarity
+                    predictions = np.where(polarity * (threshold - featureVals[j]) > 0, 1, 0)
+                    # Calculate the error using weighted sum of incorrect predictions
+                    error = np.dot(weights, predictions != labels)
+                    # Update the best classifier if the current error is lower
                     if error < min_error:
                         min_error = error
                         best_threshold = threshold
                         best_polarity = polarity
-                        best_feature = features[j]
-        bestClf = WeakClassifier(best_feature, best_threshold, best_polarity)
+                        bestClf = WeakClassifier(features[j], threshold, polarity)
         bestError = min_error
         # End your code (Part 2)
         return bestClf, bestError
