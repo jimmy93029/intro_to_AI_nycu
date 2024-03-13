@@ -27,6 +27,7 @@ class WeakClassifier:
             1 if polarity * feature(x) < polarity * threshold
             0 otherwise
         """
+        # print(self.feature.computeFeature(x))
         return (
             1
             if self.polarity * self.feature.computeFeature(x)

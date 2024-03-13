@@ -39,10 +39,9 @@ def load_data_small():
             img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
             test_data.append((img, label))
 
-    dataset = [train_data, test_data]
     # End your code (Part 1-1)
 
-    return dataset
+    return train_data, test_data
 
 
 def load_data_FDDB(data_idx="01"):
@@ -105,7 +104,6 @@ def load_data_FDDB(data_idx="01"):
         # you can utilize it for non-face region cropping
         for i in range(num_faces):
             # Begin your code (Part 1-2)
-            face_box = face_box_list[i]
             for _ in range(num_faces):  # Repeat the cropping process for each face
                 img_h, img_w = img_gray.shape
 

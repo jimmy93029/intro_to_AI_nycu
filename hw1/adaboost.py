@@ -164,14 +164,50 @@ class Adaboost:
             bestError: The error of the best classifer
         """
         # Begin your code (Part 2)
-
+        # two slow
         # train weak classifier for each feature
         min_error = float('inf')
         bestClf = None
-        best_threshold = 0
-        best_polarity = 0
 
-        for j in range(len(features)):
+        for j in tqdm(range(len(features))):
+
+            sorted_features = sorted(zip(featureVals[j], weights, labels))
+            left_1_weight,  left_0_weight, right_1_weight, right_0_weight = 0, 0, 0, 0
+
+            for threshold, weight, label in sorted_features:
+                if label == 0:
+                    right_0_weight += weight
+                else:
+                    right_1_weight += weight
+
+            for threshold, weight, label in sorted_features:
+                error = 0
+                if label == 1:
+                    right_1_weight -= weight
+                    error += weight
+                else:
+                    right_0_weight -= weight
+
+                if left_1_weight + right_0_weight < left_0_weight + right_1_weight:
+                    polarity = -1
+                    error += left_1_weight + right_0_weight
+                else:
+                    polarity = 1
+                    error += left_0_weight + right_1_weight
+
+                if label == 1:
+                    left_1_weight += weight
+                else:
+                    left_0_weight += weight
+
+                if error < min_error:
+                    min_error = error
+                    bestClf = WeakClassifier(features[j], threshold, polarity)
+
+        bestError = min_error
+        # End your code (Part 2)
+        """ orginal form
+        for j in tqdm(range(len(features))):
             for i in range(len(iis)):
                 threshold = featureVals[j][i]
                 for polarity in [-1, 1]:
@@ -182,11 +218,9 @@ class Adaboost:
                     # Update the best classifier if the current error is lower
                     if error < min_error:
                         min_error = error
-                        best_threshold = threshold
-                        best_polarity = polarity
                         bestClf = WeakClassifier(features[j], threshold, polarity)
-        bestError = min_error
-        # End your code (Part 2)
+        """
+
         return bestClf, bestError
 
     def classify(self, image):
