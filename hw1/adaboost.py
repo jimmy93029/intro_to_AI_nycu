@@ -206,7 +206,7 @@ class Adaboost:
 
         bestError = min_error
         # End your code (Part 2)
-        """ orginal form
+        """ orginal form - O(n^2) method
         for j in tqdm(range(len(features))):
             for i in range(len(iis)):
                 threshold = featureVals[j][i]

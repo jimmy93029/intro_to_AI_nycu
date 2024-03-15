@@ -23,7 +23,6 @@ def main(args):
     print(f'The number of training samples loaded: {len(trainData)}')
     print(f'The number of test samples loaded: {len(testData)}')
 
-    """
     print('Show the first and last images of training dataset')
     fig, ax = plt.subplots(1, 2)
     ax[0].axis('off')
@@ -33,12 +32,13 @@ def main(args):
     ax[1].set_title('Non face')
     ax[1].imshow(trainData[-1][0], cmap='gray')
     plt.show()
-    """
+
     # Part 2: Implement selectBest function in adaboost.py and test the following code.
     # Part 3: Modify difference values at parameter T of the Adaboost algorithm.
     # And find better results. Please test value 1~10 at least.
     # print('Start training your classifier')
-    clf = adaboost.Adaboost(T=2)
+
+    clf = adaboost.Adaboost(T=10)
     clf.train(trainData)
 
     clf.save('clf_200_1_10')
@@ -51,14 +51,14 @@ def main(args):
     print('\nEvaluate your classifier with test dataset')
     utils.evaluate(clf, testData)
 
+
     # Part 4: Implement detect function in detection.py and test the following code.
     print('\nDetect faces at the assigned location using your classifier')
     detection.detect('data/detect/detectData.txt', clf)
-    """
-    # Part 5: Test classifier on your own images
+
+    # Part 5: Test classifier on your own images      # recover it later
     print('\nDetect faces on your own images')
     detection.detect('data/detect/yourOwnImages.txt', clf)
-    """
 
 
 if __name__ == "__main__":
