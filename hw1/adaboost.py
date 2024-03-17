@@ -203,10 +203,7 @@ class Adaboost:
                 if error < min_error:
                     min_error = error
                     bestClf = WeakClassifier(features[j], threshold, polarity)
-
-        bestError = min_error
-        # End your code (Part 2)
-        """ orginal form - O(n^2) method
+        """ original O(n^2) code
         for j in tqdm(range(len(features))):
             for i in range(len(iis)):
                 threshold = featureVals[j][i]
@@ -220,6 +217,8 @@ class Adaboost:
                         min_error = error
                         bestClf = WeakClassifier(features[j], threshold, polarity)
         """
+        bestError = min_error
+        # End your code (Part 2)
 
         return bestClf, bestError
 

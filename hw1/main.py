@@ -38,7 +38,7 @@ def main(args):
     # And find better results. Please test value 1~10 at least.
     # print('Start training your classifier')
 
-    clf = adaboost.Adaboost(T=10)
+    clf = adaboost.Adaboost(T=5)
     clf.train(trainData)
 
     clf.save('clf_200_1_10')
@@ -50,7 +50,6 @@ def main(args):
 
     print('\nEvaluate your classifier with test dataset')
     utils.evaluate(clf, testData)
-
 
     # Part 4: Implement detect function in detection.py and test the following code.
     print('\nDetect faces at the assigned location using your classifier')

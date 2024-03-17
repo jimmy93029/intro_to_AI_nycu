@@ -104,32 +104,32 @@ def load_data_FDDB(data_idx="01"):
         # you can utilize it for non-face region cropping
         for i in range(num_faces):
             # Begin your code (Part 1-2)
-            for _ in range(num_faces):  # Repeat the cropping process for each face
+            while True:
+                intersects = False
                 img_h, img_w = img_gray.shape
 
                 # Randomly generate non-face bounding box
                 # Ensure that the non-face bounding box does not intersect with any face bounding box
-                while True:
-                    # Generate random coordinates for non-face region
-                    x1 = np.random.randint(0, img_w - 19)  # Left coordinate of the bounding box
-                    y1 = np.random.randint(0, img_h - 19)  # Top coordinate of the bounding box
-                    x2 = x1 + 19  # Right coordinate of the bounding box
-                    y2 = y1 + 19  # Bottom coordinate of the bounding box
 
-                    # Check if the non-face bounding box intersects with any face bounding box
-                    intersects = False
-                    for face_box in face_box_list:
-                        if (x1 < face_box[1][0] and x2 > face_box[0][0] and
-                                y1 < face_box[1][1] and y2 > face_box[0][1]):
-                            intersects = True
-                            break
+                # Generate random coordinates for non-face region
+                x1 = np.random.randint(0, img_w - 19)  # Left coordinate of the bounding box
+                y1 = np.random.randint(0, img_h - 19)  # Top coordinate of the bounding box
+                x2 = x1 + 19  # Right coordinate of the bounding box
+                y2 = y1 + 19  # Bottom coordinate of the bounding box
 
-                    if not intersects:
+                # Check if the non-face bounding box intersects with any face bounding box
+                for face_box in face_box_list:
+                    if (x1 < face_box[1][0] and x2 > face_box[0][0] and
+                            y1 < face_box[1][1] and y2 > face_box[0][1]):
+                        intersects = True
                         break
 
-                img_crop = img_gray[y1:y2, x1:x2].copy()
-                # End your code (Part 1-2)
-                nonface_dataset.append((cv2.resize(img_crop, (19, 19)), 0))
+                if not intersects:
+                    img_crop = img_gray[y1:y2, x1:x2].copy()
+                    break
+
+            # End your code (Part 1-2)
+            nonface_dataset.append((cv2.resize(img_crop, (19, 19)), 0))
 
         # cv2.imshow("windows", img_gray)
         # cv2.waitKey(0)
